@@ -47,7 +47,8 @@ function wkhtmltopdf(input, options, callback) {
   var isUrl = /^(https?|file):\/\//.test(input);
   args.push(isUrl ? quote(input) : '-');    // stdin if HTML given directly
   args.push(output ? quote(output) : '-');  // stdout if no output file
-
+  
+  console.log(args);
   if (process.platform === 'win32') {
     var child = spawn(args[0], args.slice(1));
   } else {
