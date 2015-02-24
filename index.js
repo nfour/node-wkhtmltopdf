@@ -47,8 +47,7 @@ function wkhtmltopdf(input, options, callback) {
   var isUrl = /^(https?|file):\/\//.test(input);
   args.push(isUrl ? quote(input) : '-');    // stdin if HTML given directly
   args.push(output ? quote(output) : '-');  // stdout if no output file
-  
-  console.log(args);
+
   if (process.platform === 'win32') {
     var child = spawn(args[0], args.slice(1));
   } else {
@@ -63,16 +62,18 @@ function wkhtmltopdf(input, options, callback) {
   // setup error handling
   var stream = child.stdout;
   function handleError(err) {
-    child.removeAllListeners('exit');
-    child.kill();
-    
-    // call the callback if there is one
-    if (callback)
-      callback(err);
-      
-    // if not, or there are listeners for errors, emit the error event
-    if (!callback || stream.listeners('error').length > 0)
-      stream.emit('error', err);
+    if(err.message != 'QFont::setPixelSize: Pixel size <= 0 (0)') {
+      child.removeAllListeners('exit');
+      child.kill();
+        
+      // call the callback if there is one
+      if (callback)
+        callback(err);
+          
+      // if not, or there are listeners for errors, emit the error event
+      if (!callback || stream.listeners('error').length > 0)
+        stream.emit('error', err);
+    }
   }
   
   child.once('error', handleError);
