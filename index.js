@@ -84,6 +84,8 @@ function wkhtmltopdf(input, options, callback) {
   // write input to stdin if it isn't a url
   if (!isUrl)
     child.stdin.end(input);
+    
+  stream.args = args;
   
   // return stdout stream so we can pipe
   return stream;
